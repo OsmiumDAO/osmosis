@@ -2,13 +2,18 @@
     const wallet = useWallet()
     const basket = ref({})
     const {data: verifiedFTs} = await useAPI(`/api/verifiedFTs`);
+    const prices = ref({})
     
     const fungibleTokens = computed(() => {
-        return !wallet.value?.assetsDetails ? 
+        const myVerifiedFTs = !wallet.value?.assetsDetails ? 
         [] :
         wallet.value?.assetsDetails
             .filter((asset) => asset.isFT && !asset.isNFT)  // is an FT
             .filter((asset) => verifiedFTs.value[asset.policyId])  // is verified
+        
+        myVerifiedFTs.forEach((asset) => { fetchPrice(asset) });
+
+        return myVerifiedFTs;
     })
 
     const normalizeImage = (url = "") => {
@@ -26,6 +31,12 @@
     const removeFromBasket = (asset) => {
         delete basket.value[asset.fingerprint]
     }
+
+    const fetchPrice = async (asset) => {
+        useAPI(`/api/price/${asset.policyId}${asset.nameHex}`).then(({data}) => {
+            prices.value[asset.fingerprint] = data
+        }).catch(() => 0)
+    }
 </script>
     
 <template>
@@ -33,8 +44,6 @@
         <p>A Basket is a group of FTs and an amount for each.  We'll calculate the current price in ADA</p>
         <p>The general flow is:
             <ul>
-                <li>list all the FTs in their wallet TODO: Need to reference "verified" list</li>
-                <li>let them select the FTs they want to include in the basket and the qty of each</li>
                 <li>calculate the current ADA price of the basket TODO: Need to fetch prices from minswap</li>
                 <li>let them set a time limit for the basket to be active?</li>
                 <li>build a tx to lock the tokens into a contract</li>
@@ -76,7 +85,7 @@
                         {{ parseFloat(asset.qtySelected).toLocaleString() }}
                     </td>
                     <td class="py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
-                        TODO {{ wallet.currencySymbol }}
+                        {{ (prices[asset.fingerprint]?.toADA * parseFloat(asset.qtySelected)).toFixed(2).toLocaleString() }} {{ wallet.currencySymbol }}
                     </td>
                     <td class="py-4 pl-3 pr-4 text-sm text-right text-slate-500 sm:pr-6 md:pr-0">
                         <UButton @click="removeFromBasket(asset)">Remove</UButton>
@@ -163,9 +172,7 @@
                             <UButton @click="addToBasket(asset)">Add</UButton>
                             </div>
                         <template #footer>
-                            <!-- TODO: aprox. ADA values -->
-                            <div class="text-xs opacity-50">0 / 1.23456₳</div>
-                            
+                            <div class="text-xs opacity-50">{{ prices[asset.fingerprint]?.toADA.toFixed(8).toLocaleString() }}</div>
                         </template>
                     </UCard>
                 </div>

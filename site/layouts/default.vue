@@ -55,8 +55,7 @@ const layoutUI = {
     <UCard :ui="layoutUI">
       <template #header>
         <div
-          class="w-screen shadow-md"
-        >
+          class="w-screen shadow-md">
           <div class="flex items-center justify-between w-full m-auto">
             <ULink to="/">
               <div class="flex items-center">

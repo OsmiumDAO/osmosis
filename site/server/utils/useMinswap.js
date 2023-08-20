@@ -58,6 +58,16 @@ export const useMinswap = () => {
     }
   )
 
+  const verifiedFTs = cachedFunction(
+    async () => {
+      return JSON.parse(await $fetch('https://github.com/minswap/verified-tokens/raw/main/tokens.json'));
+    },
+    {
+      maxAge:  60 * 60, // Cache for 1 hour
+      getKey: () => 'verifiedFTs'
+    }
+  )
+  
   const pools = async () => {
     return await getPools().catch(() => 0)
   }
@@ -67,6 +77,7 @@ export const useMinswap = () => {
     api: minswapSvc,
 
     pools,
-    tokenPrice
+    tokenPrice,
+    verifiedFTs
   }
 }
