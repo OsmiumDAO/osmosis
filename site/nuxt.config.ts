@@ -37,6 +37,25 @@ export default defineNuxtConfig({
     icons: 'all'
   },
 
+
+  runtimeConfig: {
+		public: {
+			DISCOUNT_POLICY_IDS: ["5f812c655ee02b2bfe2ad8d31cab5edd4b66c09149905fd23d768f5e"],
+		},
+		
+    // TODO: Need new project IDs for mainnet and preprod
+		blockfrost: {
+			mainnet: {
+				PROJECT_ID: process.env.BLOCKFROST_MAINNET_PROJECT_ID,
+				BASE_URL: "https://cardano-mainnet.blockfrost.io/api/v0",
+			},
+			preprod: {
+				PROJECT_ID: process.env.BLOCKFROST_PREPROD_PROJECT_ID,
+				BASE_URL: "https://cardano-preprod.blockfrost.io/api/v0",
+			}
+		},
+	},
+
   vite: {
     cacheDir: resolve(__dirname, '.vite'),
     plugins: [

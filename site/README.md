@@ -14,3 +14,17 @@
 
 - Purchase NFTs with any agreed Currency by the seller i.e NFT to FT swap (The sale contract will come with the accepted currency by the seller). Imagine selling a clay and accepting payment in OSM or SNEK or any other token aside from ADA.
 
+
+## Tech stack
+Nuxt 3
+Vue 3
+NuxtUI
+Tailwind CSS
+Vite
+Meshjs
+
+
+## Minswap verified tokens
+https://github.com/minswap/verified-tokens/blob/main/tokens.json
+
+PicoSwap
