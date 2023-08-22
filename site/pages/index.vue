@@ -33,7 +33,6 @@ const wallet = useWallet()
       </li>
     </ul>
     <hr />
-    <pre>{{ wallet }}</pre>
   </div>
 </template>
 
