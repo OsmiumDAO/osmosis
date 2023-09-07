@@ -91,5 +91,9 @@ export default defineNuxtConfig({
     		protocol: "ws",
     	},
     },
+  },
+
+  nitro: {
+    preset: 'vercel'
   }
 })
